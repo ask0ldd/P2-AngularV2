@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Olympic } from '../models/Olympic';
+import { Participation } from '../models/Participation';
+import { ILineChartsDatas } from './ILineChartsDatas';
 
 @Injectable({
   providedIn: 'root',
@@ -29,8 +32,8 @@ export class OlympicService {
     return this.olympics$.asObservable();
   }
 
-  // using find - rxjs operator - would allow me to ignore emissions not matching my condition, 
-  // reduce - rxjs operator - would allow me to work on successive emissions
+  // using find - rxjs operator - : ignore emissions not matching my condition, 
+  // reduce - rxjs operator - : work on successive emissions
   // it wouldn't allow me to find the first ICountryJOStats matching it
   getCountryMedals$(country : string) : Observable<number>{
     return this.getOlympics$().pipe( // !!! catch error
@@ -63,7 +66,7 @@ export class OlympicService {
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.getOlympics$().pipe(
       map((datas : Olympic[]) => datas
-        .map((countryDatas : Olympic) => ({name : countryDatas.country, value : countryDatas.participations.reduce((accumulator : number, participation : Participation) => accumulator + participation.medalsCount, 0)}))
+        ?.map((countryDatas : Olympic) => ({name : countryDatas.country, value : countryDatas?.participations.reduce((accumulator : number, participation : Participation) => accumulator + participation.medalsCount, 0)}))
       )
     )
   }
