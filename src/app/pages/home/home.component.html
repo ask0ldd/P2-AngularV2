@@ -2,7 +2,7 @@
 <hr />
 <p>{{ (olympics$ | async)?.length }} data loaded</p>
 <p>{{ (pieChartsDatas$ | async)?.length}}</p>-->
-<main class="mainpie" *ngIf="pieChartsDatas$ | async as pieDatas">
+<main class="mainpie" *ngIf="(pieChartsDatas$ | async) as pieDatas">
     <div class="statsnTitleContainer">
         <h1 class="piechartTitle">
             Medals per Country

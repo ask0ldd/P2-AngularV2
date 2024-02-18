@@ -10,11 +10,12 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+
   public olympics$: Observable<any> = of(null)
   public numberOfJOs$: Observable<any> = of(null);
   public pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
 
-  colorScheme : Color = {
+  public colorScheme : Color = {
     domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'],
     group: ScaleType.Linear,
     selectable: true,
@@ -36,7 +37,7 @@ export class HomeComponent implements OnInit {
   onSelect(event : EventEmitter<any>){
     // event obj : {name: 'Italy', value: 96, label: 'Italy'}
     if(event.name != null) {
-      this.router.navigateByUrl(`countrylinechart/${event.name.toLowerCase()}`) 
+      this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
       return
     }
   }
