@@ -10,7 +10,8 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics$: Observable<any> = of(null);
+  public olympics$: Observable<any> = of(null)
+  public numberOfJOs$: Observable<any> = of(null);
   public pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
 
   colorScheme : Color = {
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics$()
     this.pieChartsDatas$ = this.olympicService.getPieChartDatas$()
+    this.numberOfJOs$ = this.olympicService.getNumberOfJOs$()
   }
 
   setLabelFormatting(label : string): string {
