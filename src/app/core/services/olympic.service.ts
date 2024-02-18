@@ -25,7 +25,7 @@ export class OlympicService {
     );
   }
 
-  getOlympics() {
+  getOlympics$() {
     return this.olympics$.asObservable();
   }
 
