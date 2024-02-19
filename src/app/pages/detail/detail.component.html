@@ -1,1 +1,24 @@
-<p>detail works!</p>
+<main class="mainLineChart" *ngIf="linechartDatas$ | async as datas" (window:resize)="onResize($event)">
+    <div class="titlenStatsContainer">
+        <h1>{{countryName}} | dont forget back button</h1>
+        <div class="statsCells">
+            <div>
+                <p>Number of entries</p>
+                <p class="stat">{{datas.series.length}}</p>
+            </div>
+            <div>
+                <p>Total number of medals</p>
+                <p class="stat">{{totalMedals$ | async}}</p>
+            </div>
+            <div>
+                <p>Total number of athletes</p>
+                <p class="stat">{{totalAthletes$ | async}}</p>
+            </div>
+        </div>
+    </div>
+    <ngx-charts-line-chart [trimXAxisTicks]="true" [trimYAxisTicks]="true" 
+    [results]="[datas]" [xAxis]="true" [autoScale]="false" [yAxis]="true" [showGridLines]="true" 
+    [view]="view" [yScaleMin]="minYaxis" [yScaleMax]="maxYaxis"
+    [yAxisTicks]="YticksList" [xAxisLabel]="'Dates'" [showXAxisLabel]="true">
+    </ngx-charts-line-chart>
+</main>
