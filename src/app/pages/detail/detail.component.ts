@@ -19,6 +19,7 @@ export class DetailComponent implements OnInit {
   minYaxis! : number
   maxYaxis! : number
   view : [number, number] = [800, 400]
+  totalAthletes$! : Observable<number>
 
   constructor(private olympicService: OlympicService, private router:Router, private route: ActivatedRoute) { }
 
@@ -30,9 +31,16 @@ export class DetailComponent implements OnInit {
       return
     }
 
+    this.totalAthletes$ = this.olympicService.getCountryTotalAthletes$(this.countryName)
     this.linechartDatas$ = this.olympicService.getCountryLineChartDatas$(this.countryName)
   }
 
-
+  onResize(event : UIEvent) : [number, number] { // show not only take into account resize but initialsize too
+    const windowWidth = (event.target as Window).innerWidth
+    if(windowWidth <= 420) return this.view = [300, 300]
+    if(windowWidth <= 600) return this.view = [400, 300]
+    if(windowWidth <= 1200) return this.view = [600, 400]
+    return this.view = [800, 400]
+  }
 
 }
