@@ -33,6 +33,28 @@ export class DetailComponent implements OnInit {
 
     this.totalAthletes$ = this.olympicService.getCountryTotalAthletes$(this.countryName)
     this.linechartDatas$ = this.olympicService.getCountryLineChartDatas$(this.countryName)
+    this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe(datas => { // !!! don't forget to unsub
+      
+      const medalsList = datas.series?.map(serie => serie.value)
+      this.minYaxis = Math.floor((Math.min(...medalsList) / 10)) * 10
+      if(this.minYaxis < 0) this.minYaxis = 0
+      this.maxYaxis = Math.ceil((Math.max(...medalsList) / 10)) * 10
+
+      this.totalMedals = datas.series.reduce((acc, serie) => acc + serie.value, 0)
+
+      // if maxY-minY <= 20 then ticks are space by 5
+      // if > 20 then spaced by 10
+      let space = 10
+      if(this.maxYaxis-this.minYaxis <= 20) space = 5
+      if(this.maxYaxis-this.minYaxis <= 10) space = 2
+      let currentTick = this.minYaxis
+      while(currentTick<=this.maxYaxis){
+        this.YticksList.push(currentTick)
+        currentTick += space
+      }
+      console.log(this.YticksList)
+      
+    })
   }
 
   onResize(event : UIEvent) : [number, number] { // show not only take into account resize but initialsize too
