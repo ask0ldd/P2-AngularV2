@@ -5,10 +5,11 @@
   }
   
 ::ng-deep .tooltip-caret {
-    border-top: 15px solid #04838f !important;
-    border-left: 15px solid transparent !important;
-    border-right: 15px solid transparent !important;
-    width: 2rem !important;
+    border-top: 5px solid #04838f !important;
+    border-left: 5px solid transparent !important;
+    border-right: 10px solid transparent !important;
+    width: 1rem !important;
+    display:none;
 }
   
 ::ng-deep .gridline-path {
