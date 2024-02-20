@@ -35,7 +35,6 @@ export class HomeComponent implements OnInit {
   }
 
   onSelect(event : EventEmitter<any>){
-    // event obj : {name: 'Italy', value: 96, label: 'Italy'}
     if(event.name != null) {
       this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
       return
