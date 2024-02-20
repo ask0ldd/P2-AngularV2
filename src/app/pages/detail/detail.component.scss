@@ -14,6 +14,56 @@
 .gridline-path {
     stroke: #000000ff !important;
 }
+
+.mainLineChart {
+  min-height: calc(100vh - 12rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem 2rem 1rem;
+
+  .line-series path {
+    stroke-width: 3px;
+  }
+
+  .axis line {
+    stroke-width: 1px;
+  }
+
+  .tick text {
+    font-size: 16px !important;
+  }
+
+  .y.axis text {
+    font-size: 16px;
+  }
+
+  .line-chart .x.axis text:not(.tick text) {
+    font-size: 36px !important;
+    transform: translateY(32px) !important;
+  }
+}
+
+.titlenStatsContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 3rem;
+  margin: 4rem 0 3rem 0;
+  align-items: center;
+
+  h1 {
+    background-color: #04838f;
+    color: #ffffffff;
+    border-radius: 6px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    flex-grow: 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 8px 16px #04838f33;
+    width: fit-content;
+  }
+}
   
 .statsCells {
     display: flex;

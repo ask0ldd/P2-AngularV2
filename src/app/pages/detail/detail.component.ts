@@ -52,8 +52,6 @@ export class DetailComponent implements OnInit {
         this.YticksList.push(currentTick)
         currentTick += space
       }
-      console.log(this.YticksList)
-      
     })
   }
 
