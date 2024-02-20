@@ -47,9 +47,27 @@
 .titlenStatsContainer {
   display: flex;
   flex-direction: column;
-  row-gap: 3rem;
-  margin: 4rem 0 3rem 0;
+  row-gap: 2rem;
+  margin: 2rem 0 3rem 0;
   align-items: center;
+
+  a{
+    background-color: #04838f;
+    color: #ffffffff;
+    border-radius: 6px;
+    height:61px;
+    font-weight: 500;
+    padding: 0 2rem;
+    flex-grow: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 16px #04838f33;
+    width: fit-content;
+    text-decoration: none;
+    margin-bottom: 22px;
+    font-size: 20px;
+  }
 
   h1 {
     background-color: #04838f;
@@ -62,6 +80,8 @@
     justify-content: center;
     box-shadow: 0 8px 16px #04838f33;
     width: fit-content;
+    font-size: 32px;
+    margin: 0;
   }
 }
   

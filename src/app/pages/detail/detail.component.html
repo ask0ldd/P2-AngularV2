@@ -1,6 +1,7 @@
 <main class="mainLineChart" *ngIf="linechartDatas$ | async as datas" (window:resize)="onResize($event)">
     <div class="titlenStatsContainer">
-        <h1>{{countryName}} | dont forget back button</h1>
+        <h1>{{countryName}}</h1>
+        <a href>Back to the Homepage</a>
         <div class="statsCells">
             <div>
                 <p>Number of entries</p>
