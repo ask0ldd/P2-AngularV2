@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   public olympics$: Observable<any> = of(null)
   public numberOfJOs$: Observable<any> = of(null);
   public pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
+  view : [number, number] = [1200, 600]
 
   public colorScheme : Color = {
     domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'],
@@ -39,5 +40,13 @@ export class HomeComponent implements OnInit {
       this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
       return
     }
+  }
+
+  onResize(event : UIEvent) : [number, number] { // show not only take into account resize but initialsize too
+    const windowWidth = (event.target as Window).innerWidth
+    if(windowWidth <= 420) return this.view = [300, 200]
+    if(windowWidth <= 800) return this.view = [400, 300]
+    if(windowWidth <= 1200) return this.view = [800, 400]
+    return this.view = [1400, 600]
   }
 }

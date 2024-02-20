@@ -16,7 +16,7 @@
 }
 
 .mainpie {
-    padding: 3rem 0 3rem 0;
+    padding: 1rem 0 3rem 0;
     min-height: calc(100vh - 15rem);
     display: flex;
     flex-direction: column;
@@ -64,6 +64,7 @@
         @media (max-width: 1250px) {
           width: 100%;
         }
+        font-size: 20px;
     }
 
     p {

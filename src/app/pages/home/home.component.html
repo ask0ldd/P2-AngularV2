@@ -2,7 +2,7 @@
 <hr />
 <p>{{ (olympics$ | async)?.length }} data loaded</p>
 <p>{{ (pieChartsDatas$ | async)?.length}}</p>-->
-<main class="mainpie" *ngIf="(pieChartsDatas$ | async) as pieDatas">
+<main class="mainpie" *ngIf="(pieChartsDatas$ | async) as pieDatas" (window:resize)="onResize($event)">
     <div class="statsnTitleContainer">
         <h1 class="piechartTitle">
             Medals per Country
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <ngx-charts-pie-chart [results]="pieDatas" [labels]="true" [scheme]="colorScheme" [labelFormatting]="setLabelFormatting" [view]="[840,400]" (select)="onSelect($event)">
+    <ngx-charts-pie-chart [results]="pieDatas" [labels]="true" [scheme]="colorScheme" [labelFormatting]="setLabelFormatting" [view]="view" (select)="onSelect($event)">
         <ng-template #tooltipTemplate let-model="model">
             <div>
                 <p>{{model.name}}</p>
