@@ -23,8 +23,9 @@ export class OlympicService {
         // TODO: improve error handling
         console.error(error);
         // can be useful to end loading state and let the user know something went wrong
-        this.olympics$.next(null);
-        // this.olympics$.error("Can't load the Datas.")
+        // this.olympics$.next(null);
+        this.olympics$.error("Can't load the Datas.")
+        this.olympics$.complete()
         return caught;
       })
     );

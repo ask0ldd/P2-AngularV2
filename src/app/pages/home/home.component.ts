@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit {
     name: 'Pie Scheme',
   }
 
+  // change font weight of all country names
+
   constructor(private olympicService: OlympicService, private router : Router, private route : ActivatedRoute,) {}
 
   ngOnInit(): void {
