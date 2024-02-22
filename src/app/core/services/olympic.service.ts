@@ -10,7 +10,7 @@ import { ILineChartsDatas } from './ILineChartsDatas';
   providedIn: 'root',
 })
 export class OlympicService {
-  private olympicUrl = './assets/mock/olympic1.json';
+  private olympicUrl = './assets/mock/olympic.json';
   // private olympics$ = new BehaviorSubject<any>(undefined);
   private olympics$ = new ReplaySubject<any>(undefined);
 
