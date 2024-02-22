@@ -10,7 +10,7 @@ import { ILineChartsDatas } from './ILineChartsDatas';
   providedIn: 'root',
 })
 export class OlympicService {
-  private olympicUrl = './assets/mock/olympic.json';
+  private olympicUrl = './assets/mock/olympic1.json';
   // private olympics$ = new BehaviorSubject<any>(undefined);
   private olympics$ = new ReplaySubject<any>(undefined);
 
@@ -24,6 +24,7 @@ export class OlympicService {
         console.error(error);
         // can be useful to end loading state and let the user know something went wrong
         this.olympics$.next(null);
+        // this.olympics$.error("Can't load the Datas.")
         return caught;
       })
     );
@@ -34,7 +35,7 @@ export class OlympicService {
   }
 
   // using find - rxjs operator - : ignore emissions not matching my condition, 
-  // reduce - rxjs operator - : work on successive emissions
+  // map - rxjs operator - : work on successive emissions
   // it wouldn't allow me to find the first ICountryJOStats matching it
   getCountryMedals$(country : string) : Observable<number>{
     return this.getOlympics$().pipe( // !!! catch error

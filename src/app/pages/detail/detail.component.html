@@ -1,4 +1,4 @@
-<main class="mainLineChart" *ngIf="linechartDatas$ | async as datas" (window:resize)="onResize($event)">
+<main class="mainLineChart" *ngIf="!isError && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
     <div class="titlenStatsContainer">
         <h1>{{countryName}}</h1>
         <a href>Back to the Homepage</a>
@@ -22,4 +22,7 @@
     [view]="view" [yScaleMin]="minYaxis" [yScaleMax]="maxYaxis"
     [yAxisTicks]="YticksList" [xAxisLabel]="'Dates'" [showXAxisLabel]="true">
     </ngx-charts-line-chart>
+</main>
+<main *ngIf="isError">
+    Can't load the datas.
 </main>

@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   view : [number, number] = [1200, 600]
 
   public colorScheme : Color = {
-    domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'],
+    domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'], // change color order
     group: ScaleType.Linear,
     selectable: true,
     name: 'Pie Scheme',
