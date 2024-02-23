@@ -11,8 +11,8 @@ import { ILineChartsDatas } from './ILineChartsDatas';
 })
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
-  // private olympics$ = new BehaviorSubject<any>(undefined);
-  private olympics$ = new ReplaySubject<any>(undefined);
+  private olympics$ = new BehaviorSubject<any>(undefined);
+  // private olympics$ = new ReplaySubject<any>(undefined);
 
   constructor(private http: HttpClient) {}
 
