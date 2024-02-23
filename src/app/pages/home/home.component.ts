@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { Observable, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -11,17 +11,20 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class HomeComponent implements OnInit {
 
-  public olympics$: Observable<any> = of(null)
-  public numberOfJOs$: Observable<any> = of(null);
-  public pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
+  olympics$: Observable<any> = of(null)
+  numberOfJOs$: Observable<any> = of(null);
+  pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
   view : [number, number] = [1200, 600]
 
-  public colorScheme : Color = {
+  colorScheme : Color = {
     domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'], // change color order
     group: ScaleType.Linear,
     selectable: true,
     name: 'Pie Scheme',
   }
+
+  isError = false
+  olympicsSubscription! : Subscription
 
   // change font weight of all country names
 
@@ -31,6 +34,12 @@ export class HomeComponent implements OnInit {
     this.olympics$ = this.olympicService.getOlympics$()
     this.pieChartsDatas$ = this.olympicService.getPieChartDatas$()
     this.numberOfJOs$ = this.olympicService.getNumberOfJOs$()
+    this.olympicsSubscription = this.olympics$.subscribe({
+      error : (err : any) => {
+        console.log("Can't load the datas.")
+        this.isError = true
+      }
+    })
   }
 
   setLabelFormatting(label : string): string {
@@ -50,5 +59,9 @@ export class HomeComponent implements OnInit {
     if(windowWidth <= 800) return this.view = [400, 300]
     if(windowWidth <= 1200) return this.view = [800, 400]
     return this.view = [1400, 600]
+  }
+
+  ngOnDestroy(): void{
+    this.olympicsSubscription.unsubscribe()
   }
 }

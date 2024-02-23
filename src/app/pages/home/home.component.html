@@ -1,4 +1,4 @@
-<main class="mainpie" *ngIf="(pieChartsDatas$ | async) as pieDatas" (window:resize)="onResize($event)">
+<main class="mainpie" *ngIf="!isError && (pieChartsDatas$ | async) as pieDatas" (window:resize)="onResize($event)">
     <div class="statsnTitleContainer">
         <h1 class="piechartTitle">
             Medals per Country
