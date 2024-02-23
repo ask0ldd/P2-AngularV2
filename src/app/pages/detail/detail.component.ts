@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, of } from 'rxjs';
-import { ILineChartsDatas } from 'src/app/core/services/ILineChartsDatas';
+import { ILineChartsDatas } from 'src/app/core/services/interfaces/ILineChartsDatas';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class DetailComponent implements OnInit {
   maxYaxis! : number
   view : [number, number] = [800, 400]
   totalAthletes$! : Observable<number>
-  LCDatasSubscription! : Subscription
+  LineChartDatasSubscription! : Subscription
   isError : boolean = false 
 
   constructor(private olympicService: OlympicService, private router:Router, private route: ActivatedRoute) { }
@@ -35,7 +35,7 @@ export class DetailComponent implements OnInit {
 
     this.totalAthletes$ = this.olympicService.getCountryTotalAthletes$(this.countryName)
     this.linechartDatas$ = this.olympicService.getCountryLineChartDatas$(this.countryName)
-    this.LCDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
+    this.LineChartDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
       
       next : (datas) => {
       
@@ -76,7 +76,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnDestroy(): void{
-    this.LCDatasSubscription.unsubscribe()
+    this.LineChartDatasSubscription.unsubscribe()
   }
 
 }

@@ -4,15 +4,15 @@ import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 import { Participation } from '../models/Participation';
-import { ILineChartsDatas } from './ILineChartsDatas';
+import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<any>(undefined);
-  // private olympics$ = new ReplaySubject<any>(undefined);
+  // private olympics$ = new BehaviorSubject<any>(undefined);
+  private olympics$ = new ReplaySubject<any>(undefined); // display detail even when reloading browser, not happening with behaviorn; why?
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +20,7 @@ export class OlympicService {
     return this.http.get<any>(this.olympicUrl).pipe(
       tap((value) => this.olympics$.next(value)),
       catchError((error, caught) => {
-        // TODO: improve error handling
+        // !!! TODO: improve error handling => look at the bottom of the page
         console.error(error);
         // can be useful to end loading state and let the user know something went wrong
         // this.olympics$.next(null);
@@ -89,3 +89,24 @@ export class OlympicService {
     )
   }
 }
+
+
+/*
+
+https://angular.io/guide/http-handle-request-errors
+
+private handleError(error: HttpErrorResponse) {
+  if (error.status === 0) {
+    // A client-side or network error occurred. Handle it accordingly.
+    console.error('An error occurred:', error.error);
+  } else {
+    // The backend returned an unsuccessful response code.
+    // The response body may contain clues as to what went wrong.
+    console.error(
+      `Backend returned code ${error.status}, body was: `, error.error);
+  }
+  // Return an observable with a user-facing error message.
+  return throwError(() => new Error('Something bad happened; please try again later.'));
+}
+
+*/
