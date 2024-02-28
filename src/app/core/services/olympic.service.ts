@@ -34,6 +34,7 @@ export class OlympicService {
     );
   }
 
+  // return the json file content as an observable
   getOlympics$() {
     return this.olympics$.asObservable();
   }
@@ -50,6 +51,7 @@ export class OlympicService {
     )
   }
 
+  // return the number of participants for a specific country as an observable
   getCountryTotalAthletes$(country : string) : Observable<number>{
     return this.getOlympics$().pipe(
         map((datas : Olympic[]) => datas
@@ -59,6 +61,7 @@ export class OlympicService {
     )
   }
 
+  // return all the formated datas to populate the linechart for a specific country as an observable
   getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas>{
     return this.getOlympics$().pipe(
         map((datas : Olympic[]) => {
@@ -69,6 +72,7 @@ export class OlympicService {
     )
   }
 
+  // return all the formated datas to populate the homepage pie chart as an observable
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.getOlympics$().pipe(
       map((datas : Olympic[]) => datas
@@ -77,6 +81,7 @@ export class OlympicService {
     )
   }
 
+  // return the total number of JOs in the JSON as an observable
   getNumberOfJOs$() : Observable<number>{
     return this.getOlympics$().pipe(
       map((datas : Olympic[]) => {

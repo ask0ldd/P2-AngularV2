@@ -38,8 +38,8 @@ export class DetailComponent implements OnInit {
     this.LineChartDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
       
       next : (datas) => {
-      
         const medalsList = datas.series?.map(serie => serie.value)
+        // retrieve the Y min / max values to scale the Y Axis
         this.minYaxis = Math.floor((Math.min(...medalsList) / 10)) * 10
         if(this.minYaxis < 0) this.minYaxis = 0
         this.maxYaxis = Math.ceil((Math.max(...medalsList) / 10)) * 10
@@ -62,13 +62,14 @@ export class DetailComponent implements OnInit {
         console.log(error)
         this.isError = true
       }
-    }) // deal with error & complete ?
+    }) // deal with complete ?
 
     const windowWidth = window.innerWidth
     this.refreshGraphContainer(windowWidth)
 
   }
 
+  // called when the browser window is resized by the user
   onResize(event : UIEvent) : void {
     const windowWidth = (event.target as Window).innerWidth
     this.refreshGraphContainer(windowWidth)

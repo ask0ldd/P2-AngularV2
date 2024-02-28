@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
     return `${label}`
   }
 
+  // redirect to the selected country when clicking on a pie
   onSelect(event : EventEmitter<any>){
     if(event.name != null) {
       this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
@@ -54,6 +55,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  // called when the browser window is resized by the user
   onResize(event : UIEvent) : void { 
     const windowWidth = (event.target as Window).innerWidth
     this.refreshGraphContainer(windowWidth)
