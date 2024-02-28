@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 import { Participation } from '../models/Participation';
 import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
@@ -12,20 +12,23 @@ import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
   // private olympics$ = new BehaviorSubject<any>(undefined);
-  private olympics$ = new ReplaySubject<any>(undefined); // display detail even when reloading browser, not happening with behaviorn; why?
+  private olympics$ = new ReplaySubject<any>(undefined); // display detail even when refreshing browser, not happening with behavior; check why
+  private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading state
+
 
   constructor(private http: HttpClient) {}
 
   loadInitialData() {
-    return this.http.get<any>(this.olympicUrl).pipe(
+    return this.http.get<any>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
       tap((value) => this.olympics$.next(value)),
       catchError((error, caught) => {
-        // !!! TODO: improve error handling => look at the bottom of the page
-        console.error(error);
-        // can be useful to end loading state and let the user know something went wrong
-        // this.olympics$.next(null);
+        // ??? memo : error handling could be improved ? => look at the bottom of the page
+        console.error(error)
         this.olympics$.error("Can't load the Datas.")
         this.olympics$.complete()
+        // end loading state
+        this.unsubscribe$.next()
+        this.unsubscribe$.complete()
         return caught;
       })
     );
@@ -35,9 +38,9 @@ export class OlympicService {
     return this.olympics$.asObservable();
   }
 
-  // using find - rxjs operator - : ignore emissions not matching my condition, 
+  // find - rxjs operator - : ignore emissions not matching my condition, 
   // map - rxjs operator - : work on successive emissions
-  // it wouldn't allow me to find the first ICountryJOStats matching it
+  // wouldn't allow me to find the first ICountryJOStats matching a condition
   getCountryMedals$(country : string) : Observable<number>{
     return this.getOlympics$().pipe( // !!! catch error
         map((datas : Olympic[]) => datas
