@@ -69,13 +69,9 @@ export class DetailComponent implements OnInit {
 
   }
 
-  onResize(event : UIEvent) : void { // show not only take into account resize but initialsize too
+  onResize(event : UIEvent) : void {
     const windowWidth = (event.target as Window).innerWidth
     this.refreshGraphContainer(windowWidth)
-    /*if(windowWidth <= 420) return this.view = [300, 300]
-    if(windowWidth <= 600) return this.view = [400, 300]
-    if(windowWidth <= 1200) return this.view = [600, 400]
-    return this.view = [800, 400]*/
   }
 
   refreshGraphContainer(windowWidth : number) : [number, number] {
