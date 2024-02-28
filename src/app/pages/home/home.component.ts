@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   olympics$: Observable<any> = of(null)
   numberOfJOs$: Observable<any> = of(null);
   pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
-  view : [number, number] = [1200, 600]
+  view : [number, number] = [1200, 600] // !!! get window width to apply the right value
 
   colorScheme : Color = {
     domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'], // change color order
@@ -25,8 +25,6 @@ export class HomeComponent implements OnInit {
 
   isError = false
   olympicsSubscription! : Subscription
-
-  // change font weight of all country names
 
   constructor(private olympicService: OlympicService, private router : Router, private route : ActivatedRoute,) {}
 
@@ -40,6 +38,9 @@ export class HomeComponent implements OnInit {
         this.isError = true
       }
     })
+
+    const windowWidth = window.innerWidth;
+    this.refreshGraphContainer(windowWidth)
   }
 
   setLabelFormatting(label : string): string {
@@ -53,10 +54,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onResize(event : UIEvent) : [number, number] { // show not only take into account resize but initialsize too
+  onResize(event : UIEvent) : void { // !!! should not only take into account resize but initialsize too
     const windowWidth = (event.target as Window).innerWidth
-    if(windowWidth <= 420) return this.view = [300, 200]
-    if(windowWidth <= 800) return this.view = [400, 300]
+    this.refreshGraphContainer(windowWidth)
+    /*if(windowWidth <= 500) return this.view = [300, 200]
+    if(windowWidth <= 600) return this.view = [400, 300]
+    if(windowWidth <= 800) return this.view = [500, 300]
+    if(windowWidth <= 1200) return this.view = [800, 400]
+    return this.view = [1400, 600]*/
+  }
+
+  refreshGraphContainer(windowWidth : number) : [number, number] {
+    if(windowWidth <= 500) return this.view = [300, 200]
+    if(windowWidth <= 600) return this.view = [400, 300]
+    if(windowWidth <= 800) return this.view = [500, 300]
     if(windowWidth <= 1200) return this.view = [800, 400]
     return this.view = [1400, 600]
   }
