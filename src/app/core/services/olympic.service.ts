@@ -2,31 +2,33 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
-import { Olympic } from '../models/Olympic';
-import { Participation } from '../models/Participation';
+import { IOlympic } from '../models/IOlympic';
+import { IParticipation } from '../models/IParticipation';
 import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OlympicService {
-  private olympicUrl = './assets/mock/olympic.json';
-  // private olympics$ = new BehaviorSubject<any>(undefined);
-  private olympics$ = new ReplaySubject<any>(undefined); // display detail even when refreshing browser, not happening with behavior; check why
-  private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading state
-
+  
+  private olympicUrl = './assets/mock/olympic.json'
+  private olympics$ = new ReplaySubject<IOlympic[]>() // repeat value despite take(1) in app component
+  private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
+  private loadingDatasError$ = new BehaviorSubject<boolean>(false)
 
   constructor(private http: HttpClient) {}
 
+  // !!! add loading tracking
   loadInitialData() {
-    return this.http.get<any>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
+    // !!! replace <any> with an interface
+    return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
       tap((value) => this.olympics$.next(value)),
       catchError((error, caught) => {
-        // ??? memo : error handling could be improved ? => look at the bottom of the page
-        console.error(error)
+        this.loadingDatasError$.next(true)
         this.olympics$.error("Can't load the Datas.")
+        this.olympics$.next([])
         this.olympics$.complete()
-        // end loading state
+        // end loading process
         this.unsubscribe$.next()
         this.unsubscribe$.complete()
         return caught;
@@ -34,9 +36,13 @@ export class OlympicService {
     );
   }
 
+  getLoadingErrorStatus$(){
+    return this.loadingDatasError$.asObservable()
+  }
+
   // return the json file content as an observable
   getOlympics$() {
-    return this.olympics$.asObservable();
+    return this.olympics$.asObservable()
   }
 
   // find - rxjs operator - : ignore emissions not matching my condition, 
@@ -44,9 +50,9 @@ export class OlympicService {
   // wouldn't allow me to find the first ICountryJOStats matching a condition
   getCountryMedals$(country : string) : Observable<number>{
     return this.getOlympics$().pipe( // !!! catch error
-        map((datas : Olympic[]) => datas
-        .find((datas : Olympic) => datas.country.toLowerCase() === country)?.participations
-        .reduce((accumulator : number, participation : Participation) => accumulator + participation.medalsCount, 0) || 0
+        map((datas : IOlympic[]) => datas
+        .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
+        .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
         )
     )
   }
@@ -54,20 +60,20 @@ export class OlympicService {
   // return the number of participants for a specific country as an observable
   getCountryTotalAthletes$(country : string) : Observable<number>{
     return this.getOlympics$().pipe(
-        map((datas : Olympic[]) => datas
-        .find((datas : Olympic) => datas.country.toLowerCase() === country)?.participations
-        .reduce((accumulator : number, participation : Participation) => accumulator + participation.athleteCount, 0) || 0
+        map((datas : IOlympic[]) => datas
+        .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
+        .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.athleteCount, 0) || 0
         )
     )
   }
 
   // return all the formated datas to populate the linechart for a specific country as an observable
-  getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas>{
+  getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas | undefined>{
     return this.getOlympics$().pipe(
-        map((datas : Olympic[]) => {
+        map((datas : IOlympic[]) => {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
           if(selectedCountryDatas) return {name: country, series: selectedCountryDatas?.participations.map(participation => ({name : participation.year.toString(), value : participation.medalsCount}))}
-          return {name : country, series : [{name : '', value : 0 }]}
+          return undefined
         })
     )
   }
@@ -75,8 +81,8 @@ export class OlympicService {
   // return all the formated datas to populate the homepage pie chart as an observable
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.getOlympics$().pipe(
-      map((datas : Olympic[]) => datas
-        ?.map((countryDatas : Olympic) => ({name : countryDatas.country, value : countryDatas?.participations.reduce((accumulator : number, participation : Participation) => accumulator + participation.medalsCount, 0)}))
+      map((datas : IOlympic[]) => datas
+        ?.map((countryDatas : IOlympic) => ({name : countryDatas.country, value : countryDatas?.participations.reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0)}))
       )
     )
   }
@@ -84,7 +90,7 @@ export class OlympicService {
   // return the total number of JOs in the JSON as an observable
   getNumberOfJOs$() : Observable<number>{
     return this.getOlympics$().pipe(
-      map((datas : Olympic[]) => {
+      map((datas : IOlympic[]) => {
           let eventsDates : number[] = []
           datas.forEach(countryStats => {
             countryStats.participations.forEach(participation => {
