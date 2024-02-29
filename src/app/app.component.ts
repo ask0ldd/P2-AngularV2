@@ -10,7 +10,10 @@ import { OlympicService } from './core/services/olympic.service';
 export class AppComponent implements OnInit {
   constructor(private olympicService: OlympicService) {}
 
+  public title : string = "olympic-games-starter"
+
+  // create the olympic$ observable with the json datas
   ngOnInit(): void {
-    this.olympicService.loadInitialData().pipe(take(1)).subscribe();
+    this.olympicService.loadInitialData().pipe(take(1)).subscribe()
   }
 }
