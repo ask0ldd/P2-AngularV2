@@ -14,17 +14,26 @@ export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json'
   private olympics$ = new ReplaySubject<IOlympic[]>() // repeat value despite take(1) in app component
   private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
-  private loadingDatasError$ = new BehaviorSubject<boolean>(false)
+  private isLoadingError$ = new BehaviorSubject<boolean>(false)
+  private isLoading$ = new BehaviorSubject<boolean>(false)
 
   constructor(private http: HttpClient) {}
 
   // !!! add loading tracking
   loadInitialData() {
+
+    this.isLoading$.next(true)
     // !!! replace <any> with an interface
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
-      tap((value) => this.olympics$.next(value)),
+      tap((value) => {
+        this.olympics$.next(value)
+        this.isLoading$.next(false)
+        this.isLoading$.complete()
+      }),
       catchError((error, caught) => {
-        this.loadingDatasError$.next(true)
+        this.isLoadingError$.next(true)
+        this.isLoading$.next(false)
+        this.isLoading$.complete()
         this.olympics$.error("Can't load the Datas.")
         this.olympics$.next([])
         this.olympics$.complete()
@@ -36,12 +45,12 @@ export class OlympicService {
     );
   }
 
-  getLoadingErrorStatus$(){
-    return this.loadingDatasError$.asObservable()
+  getLoadingErrorStatus$() : Observable<boolean>{
+    return this.isLoadingError$.asObservable()
   }
 
   // return the json file content as an observable
-  getOlympics$() {
+  getOlympics$() : Observable<IOlympic[]> {
     return this.olympics$.asObservable()
   }
 
