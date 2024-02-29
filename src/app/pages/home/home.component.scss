@@ -28,8 +28,8 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    row-gap: 2rem;
-    margin-bottom: 2rem;
+    row-gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .piechartTitle {
@@ -78,7 +78,7 @@
     }
   }
 
-.mainError{
+.mainError, .mainLoading{
     width:100%;
     display: flex;
     justify-content: center;
