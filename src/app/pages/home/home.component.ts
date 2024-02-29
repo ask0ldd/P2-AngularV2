@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { IOlympic } from 'src/app/core/models/IOlympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -11,8 +12,8 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class HomeComponent implements OnInit {
 
-  olympics$: Observable<any> = of(null)
-  numberOfJOs$: Observable<any> = of(null);
+  olympics$: Observable<IOlympic[]> = of([])
+  numberOfJOs$: Observable<number> = of(0);
   pieChartsDatas$: Observable<{name : string, value : number} []> = of([])
   view : [number, number] = [1200, 600]
 
@@ -23,23 +24,18 @@ export class HomeComponent implements OnInit {
     name: 'Pie Scheme',
   }
 
-  isError = false
-  olympicsSubscription! : Subscription
+  isLoadingError$: Observable<boolean> = of(false)
 
   constructor(private olympicService: OlympicService, private router : Router, private route : ActivatedRoute,) {}
 
   ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics$()
+
+    this.isLoadingError$ = this.olympicService.getLoadingErrorStatus$()
+
     this.pieChartsDatas$ = this.olympicService.getPieChartDatas$()
     this.numberOfJOs$ = this.olympicService.getNumberOfJOs$()
-    this.olympicsSubscription = this.olympics$.subscribe({
-      error : (err : any) => {
-        console.log("Can't load the datas.")
-        this.isError = true
-      }
-    })
 
-    const windowWidth = window.innerWidth;
+    const windowWidth = window.innerWidth
     this.refreshGraphContainer(windowWidth)
   }
 
@@ -67,9 +63,5 @@ export class HomeComponent implements OnInit {
     if(windowWidth <= 800) return this.view = [500, 300]
     if(windowWidth <= 1200) return this.view = [800, 400]
     return this.view = [1400, 600]
-  }
-
-  ngOnDestroy(): void{
-    this.olympicsSubscription.unsubscribe()
   }
 }
