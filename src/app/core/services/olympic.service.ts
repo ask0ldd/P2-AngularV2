@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, of, throwError } from 'rxjs';
+import { catchError, delay, map, take, takeUntil, tap } from 'rxjs/operators';
 import { IOlympic } from '../models/IOlympic';
 import { IParticipation } from '../models/IParticipation';
 import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
@@ -13,40 +13,52 @@ export class OlympicService {
   
   private olympicUrl = './assets/mock/olympic.json'
   private olympics$ = new ReplaySubject<IOlympic[]>() // repeat value despite take(1) in app component
+  // private olympics$ = new BehaviorSubject<any>(undefined);
   private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
   private isLoadingError$ = new BehaviorSubject<boolean>(false)
-  private isLoading$ = new BehaviorSubject<boolean>(false)
+  private isLoading$ = new BehaviorSubject<boolean>(false) // why behavior & not of()
 
   constructor(private http: HttpClient) {}
 
-  // !!! add loading tracking
-  loadInitialData() {
+  // error messages loop
 
+  loadInitialData() {
     this.isLoading$.next(true)
-    // !!! replace <any> with an interface
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
+      delay(2000),
       tap((value) => {
+        // console.log('tap')
         this.olympics$.next(value)
         this.isLoading$.next(false)
         this.isLoading$.complete()
       }),
       catchError((error, caught) => {
-        this.isLoadingError$.next(true)
+        // console.log('error')
         this.isLoading$.next(false)
         this.isLoading$.complete()
-        this.olympics$.error("Can't load the Datas.")
-        this.olympics$.next([])
+        this.isLoadingError$.next(true)
+        this.isLoadingError$.complete()
+        this.olympics$.next([]) // to trigger take(1)
         this.olympics$.complete()
         // end loading process
         this.unsubscribe$.next()
         this.unsubscribe$.complete()
-        return caught;
+        // return caught;
+        if (error.status === 404) {
+          return throwError(() => new Error('File not found. Please check the file path.'));
+        } else {
+          return throwError(() => new Error("An error occurred: " + error.message));
+        }
       })
     );
   }
 
   getLoadingErrorStatus$() : Observable<boolean>{
     return this.isLoadingError$.asObservable()
+  }
+
+  getLoadingStatus$() : Observable<boolean>{
+    return this.isLoading$.asObservable()
   }
 
   // return the json file content as an observable
@@ -62,7 +74,11 @@ export class OlympicService {
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
-        )
+        ),
+        catchError((error) => {
+          console.error('An error occurred while fetching country medals:', error);
+          return throwError(() => new Error('Error occurred while fetching country medals'));
+        })
     )
   }
 
@@ -72,7 +88,11 @@ export class OlympicService {
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.athleteCount, 0) || 0
-        )
+        ),
+        catchError((error) => {
+          console.error('An error occurred while fetching country medals:', error);
+          return throwError(() => new Error('Error occurred while fetching country medals'));
+        })
     )
   }
 
@@ -83,6 +103,10 @@ export class OlympicService {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
           if(selectedCountryDatas) return {name: country, series: selectedCountryDatas?.participations.map(participation => ({name : participation.year.toString(), value : participation.medalsCount}))}
           return undefined
+        }),
+        catchError((error) => {
+          console.error('An error occurred while fetching country medals:', error);
+          return throwError(() => new Error('Error occurred while fetching country medals'));
         })
     )
   }
@@ -92,12 +116,17 @@ export class OlympicService {
     return this.getOlympics$().pipe(
       map((datas : IOlympic[]) => datas
         ?.map((countryDatas : IOlympic) => ({name : countryDatas.country, value : countryDatas?.participations.reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0)}))
-      )
+      ),
+      catchError((error) => {
+        console.error('An error occurred while fetching country medals:', error);
+        return throwError(() => new Error('Error occurred while fetching country medals'));
+      })
     )
   }
 
   // return the total number of JOs in the JSON as an observable
   getNumberOfJOs$() : Observable<number>{
+    // return of(0)
     return this.getOlympics$().pipe(
       map((datas : IOlympic[]) => {
           let eventsDates : number[] = []
@@ -108,7 +137,11 @@ export class OlympicService {
           })
           return eventsDates.length
         } 
-      )
+      ),
+      catchError((error) => {
+        console.error('An error occurred while fetching country medals:', error);
+        return throwError(() => new Error('Error occurred while fetching country medals'));
+      })
     )
   }
 }
