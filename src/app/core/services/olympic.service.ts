@@ -20,25 +20,24 @@ export class OlympicService {
 
   constructor(private http: HttpClient) {}
 
-  // error messages loop
-
   loadInitialData() {
     this.isLoading$.next(true)
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
       delay(2000),
       tap((value) => {
-        // console.log('tap')
         this.olympics$.next(value)
+        // loading obs off
         this.isLoading$.next(false)
         this.isLoading$.complete()
       }),
       catchError((error, caught) => {
-        // console.log('error')
+        // loading obs off
         this.isLoading$.next(false)
         this.isLoading$.complete()
+        // loading error obs on
         this.isLoadingError$.next(true)
         this.isLoadingError$.complete()
-        this.olympics$.next([]) // to trigger take(1)
+        this.olympics$.next([]) // triggering take(1)
         this.olympics$.complete()
         // end loading process
         this.unsubscribe$.next()
@@ -150,19 +149,5 @@ export class OlympicService {
 /*
 
 https://angular.io/guide/http-handle-request-errors
-
-private handleError(error: HttpErrorResponse) {
-  if (error.status === 0) {
-    // A client-side or network error occurred. Handle it accordingly.
-    console.error('An error occurred:', error.error);
-  } else {
-    // The backend returned an unsuccessful response code.
-    // The response body may contain clues as to what went wrong.
-    console.error(
-      `Backend returned code ${error.status}, body was: `, error.error);
-  }
-  // Return an observable with a user-facing error message.
-  return throwError(() => new Error('Something bad happened; please try again later.'));
-}
 
 */
