@@ -1,7 +1,7 @@
 <main class="mainpie" *ngIf="!(isLoadingError$ | async) && (pieChartsDatas$ | async) as pieDatas" (window:resize)="onResize($event)">
     <div class="statsnTitleContainer">
         <h1 class="piechartTitle">
-            Medals per Country
+            Medals per Country - {{isLoadingError$ | async}}
         </h1>
         <div class="statsContainer">
             <div>
@@ -28,5 +28,8 @@
     </ngx-charts-pie-chart>
 </main>
 <main class="mainError" *ngIf="(isLoadingError$ | async)">
-    Can't load the datas.
+    <h2>Can't load the datas.</h2>
+</main>
+<main class="mainLoading" *ngIf="!(isLoadingError$ | async) && (isLoading$ | async)">
+    <h2>Loading...</h2>
 </main>

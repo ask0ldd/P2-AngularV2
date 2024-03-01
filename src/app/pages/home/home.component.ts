@@ -25,12 +25,14 @@ export class HomeComponent implements OnInit {
   }
 
   isLoadingError$: Observable<boolean> = of(false)
+  isLoading$: Observable<boolean> = of(false)
 
   constructor(private olympicService: OlympicService, private router : Router, private route : ActivatedRoute,) {}
 
   ngOnInit(): void {
 
     this.isLoadingError$ = this.olympicService.getLoadingErrorStatus$()
+    this.isLoading$ = this.olympicService.getLoadingStatus$()
 
     this.pieChartsDatas$ = this.olympicService.getPieChartDatas$()
     this.numberOfJOs$ = this.olympicService.getNumberOfJOs$()
