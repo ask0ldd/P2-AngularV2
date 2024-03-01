@@ -1,7 +1,7 @@
 <main class="mainLineChart" *ngIf="!(isLoadingError$ | async) && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
     <div class="titlenStatsContainer">
         <h1>{{countryName}}</h1>
-        <a href>Back to the Homepage</a>
+        <a routerLink="">Go Back</a>
         <div class="statsCells">
             <div>
                 <p>Number of entries</p>
@@ -24,5 +24,8 @@
     </ngx-charts-line-chart>
 </main>
 <main class="mainError" *ngIf="(isLoadingError$ | async)">
-    Can't load the datas.
+    <h2>Can't load the datas.</h2>
+</main>
+<main class="mainLoading" *ngIf="!(isLoadingError$ | async) && (isLoading$ | async)">
+    <h2>Loading...</h2>
 </main>

@@ -23,15 +23,14 @@ export class DetailComponent implements OnInit {
   LineChartDatasSubscription! : Subscription
 
   isLoadingError$: Observable<boolean> = of(false)
+  isLoading$: Observable<boolean> = of(false)
 
   constructor(private olympicService: OlympicService, private router:Router, private route: ActivatedRoute) { }
-
-
-  // !!! deal with http://localhost:4200/detail/3
 
   ngOnInit(): void {
 
     this.isLoadingError$ = this.olympicService.getLoadingErrorStatus$()
+    this.isLoading$ = this.olympicService.getLoadingStatus$()
 
     // if no country in the url
     this.countryName = this.route.snapshot.paramMap.get('id')
@@ -78,7 +77,6 @@ export class DetailComponent implements OnInit {
 
     const windowWidth = window.innerWidth
     this.refreshGraphContainer(windowWidth)
-
   }
 
   // called when the browser window is resized by the user
