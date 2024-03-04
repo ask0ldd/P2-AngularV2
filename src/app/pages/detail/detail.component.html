@@ -17,10 +17,20 @@
             </div>
         </div>
     </div>
-    <ngx-charts-line-chart [trimXAxisTicks]="true" [trimYAxisTicks]="true" 
-    [results]="[datas]" [xAxis]="true" [autoScale]="false" [yAxis]="true" [showGridLines]="true" 
-    [view]="view" [yScaleMin]="minYaxis" [yScaleMax]="maxYaxis"
-    [yAxisTicks]="YticksList" [xAxisLabel]="'Dates'" [showXAxisLabel]="true">
+    <ngx-charts-line-chart 
+        [trimXAxisTicks]="true" 
+        [trimYAxisTicks]="true" 
+        [results]="[datas]" 
+        [xAxis]="true" 
+        [autoScale]="false" 
+        [yAxis]="true" 
+        [showGridLines]="true" 
+        [view]="view" 
+        [yScaleMin]="minYaxis" 
+        [yScaleMax]="maxYaxis"
+        [yAxisTicks]="YticksList" 
+        [xAxisLabel]="'Dates'" 
+        [showXAxisLabel]="true">
     </ngx-charts-line-chart>
 </main>
 <main class="mainError" *ngIf="(isLoadingError$ | async)">
