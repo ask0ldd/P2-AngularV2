@@ -20,6 +20,10 @@ export class OlympicService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Loads initial data from the specified URL and handles loading states and errors.
+   * @returns {Observable<IOlympic[]>} An observable of type IOlympic[] containing the loaded data.
+   */
   loadInitialData() {
     this.isLoading$.next(true)
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
@@ -68,6 +72,12 @@ export class OlympicService {
   // find - rxjs operator - : ignore emissions not matching my condition, 
   // map - rxjs operator - : work on successive emissions
   // wouldn't allow me to find the first ICountryJOStats matching a condition
+  /**
+   * Retrieves the total number of medals won by a specific country.
+   * 
+   * @param {string} country - The name of the country to retrieve the total medals for.
+   * @returns {Observable<number>} An observable that emits the total number of medals won by the country.
+   */
   getCountryMedals$(country : string) : Observable<number>{
     return this.getOlympics$().pipe( // !!! catch error
         map((datas : IOlympic[]) => datas
@@ -81,12 +91,17 @@ export class OlympicService {
     )
   }
 
-  // return the number of participants for a specific country as an observable
+  /**
+   * Retrieves the total number of athletes from a specific country.
+   * @param {string} country - The name of the country to retrieve the total athletes for.
+   * @returns {Observable<number>} An observable that emits the total number of athletes from the specified country.
+   */
   getCountryTotalAthletes$(country : string) : Observable<number>{
     return this.getOlympics$().pipe(
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
-        .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.athleteCount, 0) || 0
+        .reduce((accumulator : number, participation : IParticipation) => 
+          accumulator + participation.athleteCount, 0) || 0
         ),
         catchError((error) => {
           console.error('An error occurred while fetching country medals:', error);
@@ -95,12 +110,23 @@ export class OlympicService {
     )
   }
 
-  // return all the formated datas to populate the linechart for a specific country as an observable
+  /**
+   * Retrieves & Format all the datas to populate the linechart for a specific country.
+   * @param {string} country - The name of the country to retrieve data for.
+   * @returns {Observable<ILineChartsDatas | undefined>} An observable that emits the line chart data for the specified country or undefined if not found.
+   */
   getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas | undefined>{
     return this.getOlympics$().pipe(
         map((datas : IOlympic[]) => {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
-          if(selectedCountryDatas) return {name: country, series: selectedCountryDatas?.participations.map(participation => ({name : participation.year.toString(), value : participation.medalsCount}))}
+          if(selectedCountryDatas) return {
+            name: country, 
+            series: selectedCountryDatas?.participations.map(participation => (
+              {
+                name : participation.year.toString(), 
+                value : participation.medalsCount
+              }
+            ))}
           return undefined
         }),
         catchError((error) => {
@@ -110,11 +136,18 @@ export class OlympicService {
     )
   }
 
-  // return all the formated datas to populate the homepage pie chart as an observable
+  /**
+   * Retrieves & Format all the datas to populate the homepage pie chart.
+   * @returns {Observable<{name: string, value: number}[]>} An Observable of objects containing country names and total medals won.
+   */
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.getOlympics$().pipe(
       map((datas : IOlympic[]) => datas
-        ?.map((countryDatas : IOlympic) => ({name : countryDatas.country, value : countryDatas?.participations.reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0)}))
+        ?.map((countryDatas : IOlympic) => ({
+          name : countryDatas.country, 
+          value : countryDatas?.participations.reduce((accumulator : number, participation : IParticipation) => 
+            accumulator + participation.medalsCount, 0)
+        }))
       ),
       catchError((error) => {
         console.error('An error occurred while fetching country medals:', error);
@@ -123,7 +156,10 @@ export class OlympicService {
     )
   }
 
-  // return the total number of JOs in the JSON as an observable
+  /**
+   * Return the total number of JOs in the JSON.
+   * @returns {Observable<number>} An observable that emits the number of unique years of Olympic events.
+   */
   getNumberOfJOs$() : Observable<number>{
     // return of(0)
     return this.getOlympics$().pipe(
@@ -145,9 +181,4 @@ export class OlympicService {
   }
 }
 
-
-/*
-
-https://angular.io/guide/http-handle-request-errors
-
-*/
+// https://angular.io/guide/http-handle-request-errors
