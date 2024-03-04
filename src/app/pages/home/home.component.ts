@@ -45,7 +45,11 @@ export class HomeComponent implements OnInit {
     return `${label}`
   }
 
-  // redirect to the selected country when clicking on a pie
+  /**
+   * Redirect to the selected country when clicking on a pie.
+   * 
+   * @param {EventEmitter<any>} event - The event triggered by clicking on a pie.
+   */
   onSelect(event : EventEmitter<any>){
     if(event.name != null) {
       this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
@@ -53,12 +57,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // called when the browser window is resized by the user
+  /**
+   * Function that handles the resize event and refreshes the graph container based on the window width.
+   * @param {UIEvent} event - The resize event object.
+   * @returns {void}
+   */
   onResize(event : UIEvent) : void { 
     const windowWidth = (event.target as Window).innerWidth
     this.refreshGraphContainer(windowWidth)
   }
 
+  /**
+   * Updates the dimensions of the graph container based on the window width.
+   * @param {number} windowWidth - The width of the window.
+   * @returns {Array<number>} An array containing the new dimensions for the graph container.
+   */
   refreshGraphContainer(windowWidth : number) : [number, number] {
     if(windowWidth <= 500) return this.view = [300, 200]
     if(windowWidth <= 600) return this.view = [400, 300]
