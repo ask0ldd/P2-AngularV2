@@ -4,6 +4,7 @@ import { Observable, Subscription, of, take } from 'rxjs';
 import { ILineChartsDatas } from 'src/app/core/services/interfaces/ILineChartsDatas';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
+// Metadatas
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -79,12 +80,21 @@ export class DetailComponent implements OnInit {
     this.refreshGraphContainer(windowWidth)
   }
 
-  // called when the browser window is resized by the user
+  /**
+   * Function that handles the resize event and refreshes the graph container based on the window width.
+   * @param {UIEvent} event - The resize event object.
+   * @returns {void}
+   */
   onResize(event : UIEvent) : void {
     const windowWidth = (event.target as Window).innerWidth
     this.refreshGraphContainer(windowWidth)
   }
 
+  /**
+   * Refreshes the graph container based on the window width.
+   * @param {number} windowWidth - The width of the window.
+   * @returns {Array<number>} An array containing the width and height of the graph container.
+   */
   refreshGraphContainer(windowWidth : number) : [number, number] {
     if(windowWidth <= 420) return this.view = [300, 300]
     if(windowWidth <= 600) return this.view = [400, 300]
