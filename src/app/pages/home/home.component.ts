@@ -10,6 +10,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
+
 export class HomeComponent implements OnInit {
 
   olympics$: Observable<IOlympic[]> = of([])
@@ -18,7 +19,7 @@ export class HomeComponent implements OnInit {
   view : [number, number] = [1200, 600]
 
   colorScheme : Color = {
-    domain:['#956065', '#793d52', '#89a1db', '#9780a1', '#bfe0f1'], // change color order
+    domain:['#956065', '#bfe0f1', '#89a1db', '#793d52', '#9780a1', '#bfe0f1'], // change color order
     group: ScaleType.Linear,
     selectable: true,
     name: 'Pie Scheme',
