@@ -78,7 +78,7 @@ export class OlympicService {
    * @returns {Observable<number>} An observable that emits the total number of medals won by the country.
    */
   getCountryMedals$(country : string) : Observable<number>{
-    return this.getOlympics$().pipe(
+    return this.olympics$.pipe(
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
@@ -96,7 +96,7 @@ export class OlympicService {
    * @returns {Observable<number>} An observable that emits the total number of athletes from the specified country.
    */
   getCountryTotalAthletes$(country : string) : Observable<number>{
-    return this.getOlympics$().pipe(
+    return this.olympics$.pipe(
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => 
@@ -115,7 +115,7 @@ export class OlympicService {
    * @returns {Observable<ILineChartsDatas | undefined>} An observable that emits the line chart data for the specified country or undefined if not found.
    */
   getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas | undefined>{
-    return this.getOlympics$().pipe(
+    return this.olympics$.pipe(
         map((datas : IOlympic[]) => {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
           if(selectedCountryDatas) return {
@@ -140,7 +140,7 @@ export class OlympicService {
    * @returns {Observable<{name: string, value: number}[]>} An Observable of objects containing country names and total medals won.
    */
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
-    return this.getOlympics$().pipe(
+    return this.olympics$.pipe(
       map((datas : IOlympic[]) => datas
         ?.map((countryDatas : IOlympic) => ({
           name : countryDatas.country, 
@@ -160,7 +160,7 @@ export class OlympicService {
    * @returns {Observable<number>} An observable that emits the number of unique years of Olympic events.
    */
   getNumberOfJOs$() : Observable<number>{
-    return this.getOlympics$().pipe(
+    return this.olympics$.pipe(
       map((datas : IOlympic[]) => {
           let eventsDates : number[] = []
           datas.forEach(countryStats => {
