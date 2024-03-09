@@ -27,3 +27,9 @@ Once mastered, you should continue by creating the typescript interfaces inside 
 You're now ready to implement the requested features.
 
 Good luck!
+
+---
+
+FR /
+
+Pour démarrer le serveur de développement, tapez la commande : "ng serve". Visitez ensuite l'url suivante pour accéder à l'application : `http://localhost:4200/`. L'application se met à jour automatiquement lorsqu'une modification est apportée au code.

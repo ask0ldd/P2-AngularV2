@@ -46,11 +46,11 @@ export class OlympicService {
         // end loading process
         this.unsubscribe$.next()
         this.unsubscribe$.complete()
-        // return caught;
+        // return caught
         if (error.status === 404) {
-          return throwError(() => new Error('File not found. Please check the file path.'));
+          return throwError(() => new Error('File not found. Please check the file path.'))
         } else {
-          return throwError(() => new Error("An error occurred: " + error.message));
+          return throwError(() => new Error("An error occurred: " + error.message))
         }
       })
     );
@@ -79,7 +79,7 @@ export class OlympicService {
    * @returns {Observable<number>} An observable that emits the total number of medals won by the country.
    */
   getCountryMedals$(country : string) : Observable<number>{
-    return this.getOlympics$().pipe( // !!! catch error
+    return this.getOlympics$().pipe(
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
@@ -161,7 +161,6 @@ export class OlympicService {
    * @returns {Observable<number>} An observable that emits the number of unique years of Olympic events.
    */
   getNumberOfJOs$() : Observable<number>{
-    // return of(0)
     return this.getOlympics$().pipe(
       map((datas : IOlympic[]) => {
           let eventsDates : number[] = []
