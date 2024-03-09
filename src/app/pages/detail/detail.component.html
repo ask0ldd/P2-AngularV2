@@ -1,4 +1,4 @@
-<main class="mainLineChart" *ngIf="!(isLoadingError$ | async) && !(isLoading$ | async) && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
+<main class="mainLineChart" *ngIf="!(isLoadingError$ | async) && !(isLoading$ | async) && !(totalAthletesError$ | async) && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
     <div class="titlenStatsContainer">
         <h1>{{countryName | titlecase}}</h1>
         <a routerLink="">Go Back</a>
@@ -33,7 +33,7 @@
         [showXAxisLabel]="true">
     </ngx-charts-line-chart>
 </main>
-<main class="mainError" *ngIf="(isLoadingError$ | async)">
+<main class="mainError" *ngIf="(isLoadingError$ | async) || (totalAthletesError$ | async)">
     <h2>Can't load the datas.</h2>
 </main>
 <main class="mainLoading" *ngIf="!(isLoadingError$ | async) && (isLoading$ | async)">

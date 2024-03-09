@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, of, take } from 'rxjs';
+import { Observable, Subscription, catchError, ignoreElements, of, take } from 'rxjs';
 import { ILineChartsDatas } from 'src/app/core/services/interfaces/ILineChartsDatas';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -25,6 +25,7 @@ export class DetailComponent implements OnInit {
 
   isLoadingError$: Observable<boolean> = of(false)
   isLoading$: Observable<boolean> = of(false)
+  totalAthletesError$: Observable<boolean> = of(false)
 
   constructor(private olympicService: OlympicService, private router:Router, private route: ActivatedRoute) { }
 
@@ -42,6 +43,12 @@ export class DetailComponent implements OnInit {
 
     this.totalAthletes$ = this.olympicService.getCountryTotalAthletes$(this.countryName)
     this.linechartDatas$ = this.olympicService.getCountryLineChartDatas$(this.countryName)
+
+    this.totalAthletesError$ = this.totalAthletes$.pipe(
+      ignoreElements(),
+      catchError((err) => of(err))
+    )
+
     this.LineChartDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
       
       next : (datas) => {
