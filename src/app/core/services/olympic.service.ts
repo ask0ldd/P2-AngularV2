@@ -12,8 +12,7 @@ import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
 export class OlympicService {
   
   private olympicUrl = './assets/mock/olympic.json'
-  private olympics$ = new ReplaySubject<IOlympic[]>() // repeat value despite take(1) in app component
-  // private olympics$ = new BehaviorSubject<any>(undefined);
+  private olympics$ = new BehaviorSubject<IOlympic[]>([]);
   private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
   private isLoadingError$ = new BehaviorSubject<boolean>(false)
   private isLoading$ = new BehaviorSubject<boolean>(false) // why behavior & not of()
@@ -27,7 +26,7 @@ export class OlympicService {
   loadInitialData() {
     this.isLoading$.next(true)
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
-      delay(2000),
+      delay(600),
       tap((value) => {
         this.olympics$.next(value)
         // loading obs off

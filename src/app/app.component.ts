@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   public title : string = "olympic-games-starter"
 
-  // create the olympic$ observable with the json datas
+  // create the olympic$ observable containing the json datas
   ngOnInit(): void {
     this.olympicService.loadInitialData().pipe(take(1)).subscribe()
   }
