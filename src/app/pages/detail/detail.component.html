@@ -1,4 +1,4 @@
-<main class="mainLineChart" *ngIf="!(isLoadingError$ | async) && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
+<main class="mainLineChart" *ngIf="!(isLoadingError$ | async) && !(isLoading$ | async) && (linechartDatas$ | async) as datas" (window:resize)="onResize($event)">
     <div class="titlenStatsContainer">
         <h1>{{countryName | titlecase}}</h1>
         <a routerLink="">Go Back</a>
