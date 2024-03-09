@@ -47,6 +47,11 @@ export class HomeComponent implements OnInit {
     this.refreshGraphContainer(windowWidth)
   }
 
+  /**
+   * Sets the formatting for a label.
+   * @param {string} label - The label to be formatted.
+   * @returns {string} - The formatted label.
+   */
   setLabelFormatting(label : string): string {
     return `${label}`
   }

@@ -55,17 +55,28 @@ export class OlympicService {
     );
   }
 
+  /**
+   * Retrieves the loading error status as an Observable<boolean>.
+   * @returns {Observable<boolean>} An Observable that emits a boolean value indicating the loading error status.
+   */
   getLoadingErrorStatus$() : Observable<boolean>{
     return this.isLoadingError$.asObservable()
   }
 
+  /**
+   * Retrieves the loading status as an Observable<boolean>.
+   * @returns {Observable<boolean>} An Observable that emits a boolean value indicating the loading status.
+   */
   getLoadingStatus$() : Observable<boolean>{
     return this.isLoading$.asObservable()
   }
 
-  // return the json file content as an observable
+  /**
+  *  Returns the JSON file content as an observable.
+  *  @returns {Observable<IOlympic[]>} An observable of type IOlympic[] containing the JSON file content.
+  */
   getOlympics$() : Observable<IOlympic[]> {
-    return this.olympics$.asObservable()
+  return this.olympics$.asObservable()
   }
 
   // find - rxjs operator - : ignore emissions not matching my condition, 
