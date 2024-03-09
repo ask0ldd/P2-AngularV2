@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { Observable, of } from 'rxjs';
+import { Observable, catchError, ignoreElements, of } from 'rxjs';
 import { IOlympic } from 'src/app/core/models/IOlympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
 
   isLoadingError$: Observable<boolean> = of(false)
   isLoading$: Observable<boolean> = of(false)
+  numberOfJOsError$: Observable<boolean> = of(false)
 
   constructor(private olympicService: OlympicService, private router : Router, private route : ActivatedRoute,) {}
 
@@ -37,6 +38,10 @@ export class HomeComponent implements OnInit {
 
     this.pieChartsDatas$ = this.olympicService.getPieChartDatas$()
     this.numberOfJOs$ = this.olympicService.getNumberOfJOs$()
+    this.numberOfJOsError$ = this.numberOfJOs$.pipe(
+      ignoreElements(),
+      catchError((err) => of(err))
+    )
 
     const windowWidth = window.innerWidth
     this.refreshGraphContainer(windowWidth)
