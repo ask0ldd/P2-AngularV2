@@ -95,8 +95,8 @@ export class OlympicService {
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
         ),
         catchError((error) => {
-          console.error('An error occurred while fetching country medals:', error);
-          return throwError(() => new Error('Error occurred while fetching country medals'));
+          console.error('An error occurred while fetching country medals:', error)
+          return throwError(() => new Error('Error occurred while fetching country medals'))
         })
     )
   }
@@ -114,8 +114,8 @@ export class OlympicService {
           accumulator + participation.athleteCount, 0) || 0
         ),
         catchError((error) => {
-          console.error('An error occurred while fetching country medals:', error);
-          return throwError(() => new Error('Error occurred while fetching country medals'));
+          console.error('An error occurred while fetching the total of athletes:', error)
+          return throwError(() => new Error('Error occurred while fetching the total of athletes'))
         })
     )
   }
@@ -140,15 +140,15 @@ export class OlympicService {
           return undefined
         }),
         catchError((error) => {
-          console.error('An error occurred while fetching country medals:', error);
-          return throwError(() => new Error('Error occurred while fetching country medals'));
+          console.error('An error occurred while fetching the line chart datas:', error)
+          return throwError(() => new Error('Error occurred while fetching the line chart datas'))
         })
     )
   }
 
   /**
    * Retrieves & Format all the datas to populate the homepage pie chart.
-   * @returns {Observable<{name: string, value: number}[]>} An Observable of objects containing country names and total medals won.
+   * @returns {Observable<{name: string, value: number}[]>} An Observable of objects containing all the datas to populate the homepage pie chart.
    */
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.olympics$.pipe(
@@ -160,8 +160,8 @@ export class OlympicService {
         }))
       ),
       catchError((error) => {
-        console.error('An error occurred while fetching country medals:', error);
-        return throwError(() => new Error('Error occurred while fetching country medals'));
+        console.error('An error occurred while fetching the pie chart datas:', error);
+        return throwError(() => new Error('Error occurred while fetching the pie chart datas'));
       })
     )
   }
@@ -183,8 +183,8 @@ export class OlympicService {
         } 
       ),
       catchError((error) => {
-        console.error('An error occurred while fetching country medals:', error);
-        return throwError(() => new Error('Error occurred while fetching country medals'));
+        console.error('An error occurred while fetching the number of JOs :', error)
+        return throwError(() => new Error('Error occurred while fetching the number of JOs'))
       })
     )
   }
