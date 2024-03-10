@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, catchError, ignoreElements, of, take } from 'rxjs';
 import { ILineChartsDatas } from 'src/app/core/services/interfaces/ILineChartsDatas';
@@ -10,7 +10,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnDestroy {
 
   countryName! : string | null
   linechartDatas$: Observable<ILineChartsDatas | undefined> = of(undefined)
@@ -21,7 +21,7 @@ export class DetailComponent implements OnInit {
   maxYaxis : number = 0
   view : [number, number] = [800, 400]
   totalAthletes$! : Observable<number>
-  LineChartDatasSubscription! : Subscription
+  lineChartDatasSubscription! : Subscription
 
   isLoadingError$: Observable<boolean> = of(false)
   isLoading$: Observable<boolean> = of(false)
@@ -49,11 +49,14 @@ export class DetailComponent implements OnInit {
       catchError((err) => of(err))
     )
 
-    this.LineChartDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
+    this.lineChartDatasSubscription = this.olympicService.getCountryLineChartDatas$(this.countryName).subscribe({
       
       next : (datas) => {
         // if country doesn't exist in the datas
-        if(datas == null) return
+        if(datas == null) {
+          this.router.navigateByUrl('/404')
+          return
+        }
         const medalsList = datas.series?.map(serie => serie.value)
         // retrieve the Y min / max values to scale the Y Axis
         this.minYaxis = Math.floor((Math.min(...medalsList) / 10)) * 10
@@ -106,7 +109,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnDestroy(): void{
-    this.LineChartDatasSubscription.unsubscribe()
+    this.lineChartDatasSubscription.unsubscribe()
   }
 
 }

@@ -60,8 +60,9 @@ export class HomeComponent implements OnInit {
    * Redirect to the selected country when clicking on a pie.
    * 
    * @param {EventEmitter<any>} event - The event triggered by clicking on a pie.
+   * @returns {void}
    */
-  onSelect(event : EventEmitter<any>){
+  onSelect(event : EventEmitter<any>) : void {
     if(event.name != null) {
       this.router.navigateByUrl(`detail/${event.name.toLowerCase()}`) 
       return

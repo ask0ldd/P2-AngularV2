@@ -23,7 +23,7 @@ export class OlympicService {
    * Loads initial data from the specified URL and handles loading states and errors.
    * @returns {Observable<IOlympic[]>} An observable of type IOlympic[] containing the loaded data.
    */
-  loadInitialData() {
+  loadInitialData() : Observable<IOlympic[]> {
     this.isLoading$.next(true)
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(takeUntil(this.unsubscribe$)).pipe( // takeuntil : control loading state
       delay(600),
