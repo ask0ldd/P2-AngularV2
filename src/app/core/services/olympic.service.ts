@@ -16,6 +16,7 @@ export class OlympicService {
   private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
   private isLoadingError$ = new BehaviorSubject<boolean>(false)
   private isLoading$ = new BehaviorSubject<boolean>(false) // why behavior & not of()
+  private isCountryMissing$ = new BehaviorSubject<boolean>(false)
 
   constructor(private http: HttpClient) {}
 
@@ -129,7 +130,8 @@ export class OlympicService {
     return this.olympics$.pipe(
         map((datas : IOlympic[]) => {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
-          if(selectedCountryDatas) return {
+          // console.log(selectedCountryDatas)
+          if(selectedCountryDatas != null) return {
             name: country, 
             series: selectedCountryDatas?.participations.map(participation => (
               {
@@ -137,7 +139,8 @@ export class OlympicService {
                 value : participation.medalsCount
               }
             ))}
-          return undefined
+          throw new Error("Country not found.")
+          // return undefined
         }),
         catchError((error) => {
           console.error('An error occurred while fetching the line chart datas:', error)

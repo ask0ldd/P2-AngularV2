@@ -12,8 +12,12 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class DetailComponent implements OnInit, OnDestroy {
 
+  // olympics$: Observable<IOlympic[]> = of([])
   countryName! : string | null
-  linechartDatas$: Observable<ILineChartsDatas | undefined> = of(undefined)
+  linechartDatas$: Observable<ILineChartsDatas | undefined> = of({
+    name: "aaa",
+    series: [{ name: "", value: 0}],
+  })
   YticksList : number[] = [] /* = [0, 5 , 10, 15, 20]*/
   maxMedals : number = 0
   totalMedals : number = 0
@@ -36,10 +40,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     // if no country in the url
     this.countryName = this.route.snapshot.paramMap.get('id')
-    if(this.countryName == null) {
-      this.router.navigateByUrl('/404') 
-      return
-    }
+    if(this.countryName == null) return
 
     this.totalAthletes$ = this.olympicService.getCountryTotalAthletes$(this.countryName)
     this.linechartDatas$ = this.olympicService.getCountryLineChartDatas$(this.countryName)
@@ -53,6 +54,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       
       next : (datas) => {
         // if country doesn't exist in the datas
+        console.log(datas)
         if(datas == null) {
           this.router.navigateByUrl('/404')
           return
