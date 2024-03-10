@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, of, throwError } from 'rxjs';
-import { catchError, delay, map, take, takeUntil, tap } from 'rxjs/operators';
+import { catchError, delay, filter, map, take, takeUntil, tap } from 'rxjs/operators';
 import { IOlympic } from '../models/IOlympic';
 import { IParticipation } from '../models/IParticipation';
 import { ILineChartsDatas } from './interfaces/ILineChartsDatas';
@@ -16,7 +16,6 @@ export class OlympicService {
   private unsubscribe$: Subject<void> = new Subject<void>() // when .complete() => end http.get loading process
   private isLoadingError$ = new BehaviorSubject<boolean>(false)
   private isLoading$ = new BehaviorSubject<boolean>(false) // why behavior & not of()
-  private isCountryMissing$ = new BehaviorSubject<boolean>(false)
 
   constructor(private http: HttpClient) {}
 
@@ -91,6 +90,7 @@ export class OlympicService {
    */
   getCountryMedals$(country : string) : Observable<number>{
     return this.olympics$.pipe(
+        filter(datas => datas.length > 0),
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => accumulator + participation.medalsCount, 0) || 0
@@ -109,6 +109,7 @@ export class OlympicService {
    */
   getCountryTotalAthletes$(country : string) : Observable<number>{
     return this.olympics$.pipe(
+        filter(datas => datas.length > 0),
         map((datas : IOlympic[]) => datas
         .find((datas : IOlympic) => datas.country.toLowerCase() === country)?.participations
         .reduce((accumulator : number, participation : IParticipation) => 
@@ -128,9 +129,9 @@ export class OlympicService {
    */
   getCountryLineChartDatas$(country : string) : Observable<ILineChartsDatas | undefined>{
     return this.olympics$.pipe(
+        filter(datas => datas.length > 0),
         map((datas : IOlympic[]) => {
           const selectedCountryDatas = datas.find((datas) => datas.country.toLowerCase() === country)
-          // console.log(selectedCountryDatas)
           if(selectedCountryDatas != null) return {
             name: country, 
             series: selectedCountryDatas?.participations.map(participation => (
@@ -139,8 +140,7 @@ export class OlympicService {
                 value : participation.medalsCount
               }
             ))}
-          throw new Error("Country not found.")
-          // return undefined
+          return undefined
         }),
         catchError((error) => {
           console.error('An error occurred while fetching the line chart datas:', error)
@@ -155,6 +155,7 @@ export class OlympicService {
    */
   getPieChartDatas$() : Observable<{name : string, value : number} []>{
     return this.olympics$.pipe(
+      filter(datas => datas.length > 0),
       map((datas : IOlympic[]) => datas
         ?.map((countryDatas : IOlympic) => ({
           name : countryDatas.country, 
@@ -175,6 +176,7 @@ export class OlympicService {
    */
   getNumberOfJOs$() : Observable<number>{
     return this.olympics$.pipe(
+      filter(datas => datas.length > 0),
       map((datas : IOlympic[]) => {
           let eventsDates : number[] = []
           datas.forEach(countryStats => {

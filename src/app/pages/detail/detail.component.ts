@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, catchError, ignoreElements, of, take } from 'rxjs';
+import { Observable, Subscription, catchError, ignoreElements, of, skip, take } from 'rxjs';
 import { ILineChartsDatas } from 'src/app/core/services/interfaces/ILineChartsDatas';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -12,12 +12,8 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class DetailComponent implements OnInit, OnDestroy {
 
-  // olympics$: Observable<IOlympic[]> = of([])
   countryName! : string | null
-  linechartDatas$: Observable<ILineChartsDatas | undefined> = of({
-    name: "aaa",
-    series: [{ name: "", value: 0}],
-  })
+  linechartDatas$: Observable<ILineChartsDatas | undefined> = of(undefined)
   YticksList : number[] = [] /* = [0, 5 , 10, 15, 20]*/
   maxMedals : number = 0
   totalMedals : number = 0
@@ -54,7 +50,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       
       next : (datas) => {
         // if country doesn't exist in the datas
-        console.log(datas)
         if(datas == null) {
           this.router.navigateByUrl('/404')
           return
